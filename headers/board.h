@@ -12,6 +12,9 @@ class LBoard{
 	gameStates mGameState;
 	gameStates mWinner;
 	int mMoves;
+	
+	bool AImadeMove;
+	
 	public:
 		LBoard();
 	
@@ -35,6 +38,12 @@ class LBoard{
 		}
 		
 		void AImove();
+	
+		void AIcompleteRow();
+	
+		void AIblockRow();
+	
+		void AIrandom();
 };
 
 #endif
