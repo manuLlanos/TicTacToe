@@ -179,20 +179,372 @@ bool LBoard::someoneWon()
 }
 
 
-//For now, there is no real AI, it just picks a random empty square
-//Later, when the code is better organized, implement a working AI with minimax algorithm
+//Added a simple handcrafted AI that checks to complete rows first (win), else block player victories (prevent losing), 
+// or make a single move (at random for now).
+
 void LBoard::AImove()
 {
-	int x;
-	do
-	{
-		x = Random(9);
-	} while( mSquares[x].getState() != SQUARE_EMPTY);
-	mSquares[x].placeCircle();
+	AImadeMove = false;
 	
+	AIcompleteRow();
+	
+	AIblockRow();
+	
+	AIrandom();
 	
 	mMoves++;
 	
-	if( !someoneWon() && mMoves < 9)
-			mGameState = GAME_PLAYER_TURN;
+	if( ! someoneWon() )
+		mGameState = GAME_PLAYER_TURN;
+}
+
+
+//If there are 2 circles and an empty space in a row, complete the row to defeat the player
+void LBoard::AIcompleteRow()
+{
+	//FIRST ROW
+	if( mSquares[0].getState() == SQUARE_EMPTY && mSquares[1].getState() == SQUARE_CIRCLE && mSquares[2].getState() == SQUARE_CIRCLE)
+	{
+		mSquares[0].placeCircle();
+		AImadeMove = true;
+	}
+	
+	else if( mSquares[0].getState() == SQUARE_CIRCLE && mSquares[1].getState() == SQUARE_EMPTY && mSquares[2].getState() == SQUARE_CIRCLE)
+	{
+		mSquares[1].placeCircle();
+		AImadeMove = true;
+	}
+	
+	else if( mSquares[0].getState() == SQUARE_CIRCLE && mSquares[1].getState() == SQUARE_CIRCLE && mSquares[2].getState() == SQUARE_EMPTY)
+	{
+		mSquares[2].placeCircle();
+		AImadeMove = true;
+	}
+	
+	//SECOND ROW
+	else if( mSquares[3].getState() == SQUARE_EMPTY && mSquares[4].getState() == SQUARE_CIRCLE && mSquares[5].getState() == SQUARE_CIRCLE)
+	{
+		mSquares[3].placeCircle();
+		AImadeMove = true;
+	}
+	
+	else if( mSquares[3].getState() == SQUARE_CIRCLE && mSquares[4].getState() == SQUARE_EMPTY && mSquares[5].getState() == SQUARE_CIRCLE)
+	{
+		mSquares[4].placeCircle();
+		AImadeMove = true;
+	}
+	
+	else if( mSquares[3].getState() == SQUARE_CIRCLE && mSquares[4].getState() == SQUARE_CIRCLE && mSquares[5].getState() == SQUARE_EMPTY)
+	{
+		mSquares[5].placeCircle();
+		AImadeMove = true;
+	}
+	
+	//THIRD ROW
+	else if( mSquares[6].getState() == SQUARE_EMPTY && mSquares[7].getState() == SQUARE_CIRCLE && mSquares[8].getState() == SQUARE_CIRCLE)
+	{
+		mSquares[6].placeCircle();
+		AImadeMove = true;
+	}
+	
+	else if( mSquares[6].getState() == SQUARE_CIRCLE && mSquares[7].getState() == SQUARE_EMPTY && mSquares[8].getState() == SQUARE_CIRCLE)
+	{
+		mSquares[7].placeCircle();
+		AImadeMove = true;
+	}
+	
+	else if( mSquares[6].getState() == SQUARE_CIRCLE && mSquares[7].getState() == SQUARE_CIRCLE && mSquares[8].getState() == SQUARE_EMPTY)
+	{
+		mSquares[8].placeCircle();
+		AImadeMove = true;
+	}
+	
+	//FIRST COLUMN
+	
+	else if( mSquares[0].getState() == SQUARE_EMPTY && mSquares[3].getState() == SQUARE_CIRCLE && mSquares[6].getState() == SQUARE_CIRCLE)
+	{
+		mSquares[0].placeCircle();
+		AImadeMove = true;
+	}
+	
+	else if( mSquares[0].getState() == SQUARE_CIRCLE && mSquares[3].getState() == SQUARE_EMPTY && mSquares[6].getState() == SQUARE_CIRCLE)
+	{
+		mSquares[3].placeCircle();
+		AImadeMove = true;
+	}
+	
+	else if( mSquares[0].getState() == SQUARE_CIRCLE && mSquares[3].getState() == SQUARE_CIRCLE && mSquares[6].getState() == SQUARE_EMPTY)
+	{
+		mSquares[6].placeCircle();
+		AImadeMove = true;
+	}
+	
+	//SECOND COLUMN
+	
+	else if( mSquares[1].getState() == SQUARE_EMPTY && mSquares[4].getState() == SQUARE_CIRCLE && mSquares[7].getState() == SQUARE_CIRCLE)
+	{
+		mSquares[1].placeCircle();
+		AImadeMove = true;
+	}
+	
+	else if( mSquares[1].getState() == SQUARE_CIRCLE && mSquares[4].getState() == SQUARE_EMPTY && mSquares[7].getState() == SQUARE_CIRCLE)
+	{
+		mSquares[4].placeCircle();
+		AImadeMove = true;
+	}
+	
+	else if( mSquares[1].getState() == SQUARE_CIRCLE && mSquares[4].getState() == SQUARE_CIRCLE && mSquares[7].getState() == SQUARE_EMPTY)
+	{
+		mSquares[7].placeCircle();
+		AImadeMove = true;
+	}
+	
+	
+	//THIRD COLUMN
+	
+	else if( mSquares[2].getState() == SQUARE_EMPTY && mSquares[5].getState() == SQUARE_CIRCLE && mSquares[8].getState() == SQUARE_CIRCLE)
+	{
+		mSquares[2].placeCircle();
+		AImadeMove = true;
+	}
+	
+	else if( mSquares[2].getState() == SQUARE_CIRCLE && mSquares[5].getState() == SQUARE_EMPTY && mSquares[8].getState() == SQUARE_CIRCLE)
+	{
+		mSquares[5].placeCircle();
+		AImadeMove = true;
+	}
+	
+	else if( mSquares[2].getState() == SQUARE_CIRCLE && mSquares[5].getState() == SQUARE_CIRCLE && mSquares[8].getState() == SQUARE_EMPTY)
+	{
+		mSquares[8].placeCircle();
+		AImadeMove = true;
+	}
+	
+	
+	//FIRST DIAGONAL
+	
+	else if( mSquares[0].getState() == SQUARE_EMPTY && mSquares[4].getState() == SQUARE_CIRCLE && mSquares[8].getState() == SQUARE_CIRCLE)
+	{
+		mSquares[0].placeCircle();
+		AImadeMove = true;
+	}
+	
+	else if( mSquares[0].getState() == SQUARE_CIRCLE && mSquares[4].getState() == SQUARE_EMPTY && mSquares[8].getState() == SQUARE_CIRCLE)
+	{
+		mSquares[4].placeCircle();
+		AImadeMove = true;
+	}
+	
+	else if( mSquares[0].getState() == SQUARE_CIRCLE && mSquares[4].getState() == SQUARE_CIRCLE && mSquares[8].getState() == SQUARE_EMPTY)
+	{
+		mSquares[8].placeCircle();
+		AImadeMove = true;
+	}
+	
+	//SECOND DIAGONAL
+	
+	else if( mSquares[2].getState() == SQUARE_EMPTY && mSquares[4].getState() == SQUARE_CIRCLE && mSquares[6].getState() == SQUARE_CIRCLE)
+	{
+		mSquares[2].placeCircle();
+		AImadeMove = true;
+	}
+	
+	else if( mSquares[2].getState() == SQUARE_CIRCLE && mSquares[4].getState() == SQUARE_EMPTY && mSquares[6].getState() == SQUARE_CIRCLE)
+	{
+		mSquares[4].placeCircle();
+		AImadeMove = true;
+	}
+	
+	else if( mSquares[2].getState() == SQUARE_CIRCLE && mSquares[4].getState() == SQUARE_CIRCLE && mSquares[6].getState() == SQUARE_EMPTY)
+	{
+		mSquares[6].placeCircle();
+		AImadeMove = true;
+	}
+}
+
+
+//if the AI could not finish a row, check if the player is about to win, and block him
+void LBoard::AIblockRow()
+{
+	if( AImadeMove )
+		return;
+	
+	//FIRST ROW
+	if( mSquares[0].getState() == SQUARE_EMPTY && mSquares[1].getState() == SQUARE_CROSS && mSquares[2].getState() == SQUARE_CROSS)
+	{
+		mSquares[0].placeCircle();
+		AImadeMove = true;
+	}
+	
+	else if( mSquares[0].getState() == SQUARE_CROSS && mSquares[1].getState() == SQUARE_EMPTY && mSquares[2].getState() == SQUARE_CROSS)
+	{
+		mSquares[1].placeCircle();
+		AImadeMove = true;
+	}
+	
+	else if( mSquares[0].getState() == SQUARE_CROSS && mSquares[1].getState() == SQUARE_CROSS && mSquares[2].getState() == SQUARE_EMPTY)
+	{
+		mSquares[2].placeCircle();
+		AImadeMove = true;
+	}
+	
+	//SECOND ROW
+	else if( mSquares[3].getState() == SQUARE_EMPTY && mSquares[4].getState() == SQUARE_CROSS && mSquares[5].getState() == SQUARE_CROSS)
+	{
+		mSquares[3].placeCircle();
+		AImadeMove = true;
+	}
+	
+	else if( mSquares[3].getState() == SQUARE_CROSS && mSquares[4].getState() == SQUARE_EMPTY && mSquares[5].getState() == SQUARE_CROSS)
+	{
+		mSquares[4].placeCircle();
+		AImadeMove = true;
+	}
+	
+	else if( mSquares[3].getState() == SQUARE_CROSS && mSquares[4].getState() == SQUARE_CROSS && mSquares[5].getState() == SQUARE_EMPTY)
+	{
+		mSquares[5].placeCircle();
+		AImadeMove = true;
+	}
+	
+	//THIRD ROW
+	else if( mSquares[6].getState() == SQUARE_EMPTY && mSquares[7].getState() == SQUARE_CROSS && mSquares[8].getState() == SQUARE_CROSS)
+	{
+		mSquares[6].placeCircle();
+		AImadeMove = true;
+	}
+	
+	else if( mSquares[6].getState() == SQUARE_CROSS && mSquares[7].getState() == SQUARE_EMPTY && mSquares[8].getState() == SQUARE_CROSS)
+	{
+		mSquares[7].placeCircle();
+		AImadeMove = true;
+	}
+	
+	else if( mSquares[6].getState() == SQUARE_CROSS && mSquares[7].getState() == SQUARE_CROSS && mSquares[8].getState() == SQUARE_EMPTY)
+	{
+		mSquares[8].placeCircle();
+		AImadeMove = true;
+	}
+	
+	//FIRST COLUMN
+	
+	else if( mSquares[0].getState() == SQUARE_EMPTY && mSquares[3].getState() == SQUARE_CROSS && mSquares[6].getState() == SQUARE_CROSS)
+	{
+		mSquares[0].placeCircle();
+		AImadeMove = true;
+	}
+	
+	else if( mSquares[0].getState() == SQUARE_CROSS && mSquares[3].getState() == SQUARE_EMPTY && mSquares[6].getState() == SQUARE_CROSS)
+	{
+		mSquares[3].placeCircle();
+		AImadeMove = true;
+	}
+	
+	else if( mSquares[0].getState() == SQUARE_CROSS && mSquares[3].getState() == SQUARE_CROSS && mSquares[6].getState() == SQUARE_EMPTY)
+	{
+		mSquares[6].placeCircle();
+		AImadeMove = true;
+	}
+	
+	//SECOND COLUMN
+	
+	else if( mSquares[1].getState() == SQUARE_EMPTY && mSquares[4].getState() == SQUARE_CROSS && mSquares[7].getState() == SQUARE_CROSS)
+	{
+		mSquares[1].placeCircle();
+		AImadeMove = true;
+	}
+	
+	else if( mSquares[1].getState() == SQUARE_CROSS && mSquares[4].getState() == SQUARE_EMPTY && mSquares[7].getState() == SQUARE_CROSS)
+	{
+		mSquares[4].placeCircle();
+		AImadeMove = true;
+	}
+	
+	else if( mSquares[1].getState() == SQUARE_CROSS && mSquares[4].getState() == SQUARE_CROSS && mSquares[7].getState() == SQUARE_EMPTY)
+	{
+		mSquares[7].placeCircle();
+		AImadeMove = true;
+	}
+	
+	
+	//THIRD COLUMN
+	
+	else if( mSquares[2].getState() == SQUARE_EMPTY && mSquares[5].getState() == SQUARE_CROSS && mSquares[8].getState() == SQUARE_CROSS)
+	{
+		mSquares[2].placeCircle();
+		AImadeMove = true;
+	}
+	
+	else if( mSquares[2].getState() == SQUARE_CROSS && mSquares[5].getState() == SQUARE_EMPTY && mSquares[8].getState() == SQUARE_CROSS)
+	{
+		mSquares[5].placeCircle();
+		AImadeMove = true;
+	}
+	
+	else if( mSquares[2].getState() == SQUARE_CROSS && mSquares[5].getState() == SQUARE_CROSS && mSquares[8].getState() == SQUARE_EMPTY)
+	{
+		mSquares[8].placeCircle();
+		AImadeMove = true;
+	}
+	
+	
+	//FIRST DIAGONAL
+	
+	else if( mSquares[0].getState() == SQUARE_EMPTY && mSquares[4].getState() == SQUARE_CROSS && mSquares[8].getState() == SQUARE_CROSS)
+	{
+		mSquares[0].placeCircle();
+		AImadeMove = true;
+	}
+	
+	else if( mSquares[0].getState() == SQUARE_CROSS && mSquares[4].getState() == SQUARE_EMPTY && mSquares[8].getState() == SQUARE_CROSS)
+	{
+		mSquares[4].placeCircle();
+		AImadeMove = true;
+	}
+	
+	else if( mSquares[0].getState() == SQUARE_CROSS && mSquares[4].getState() == SQUARE_CROSS && mSquares[8].getState() == SQUARE_EMPTY)
+	{
+		mSquares[8].placeCircle();
+		AImadeMove = true;
+	}
+	
+	//SECOND DIAGONAL
+	
+	else if( mSquares[2].getState() == SQUARE_EMPTY && mSquares[4].getState() == SQUARE_CROSS && mSquares[6].getState() == SQUARE_CROSS)
+	{
+		mSquares[2].placeCircle();
+		AImadeMove = true;
+	}
+	
+	else if( mSquares[2].getState() == SQUARE_CROSS && mSquares[4].getState() == SQUARE_EMPTY && mSquares[6].getState() == SQUARE_CROSS)
+	{
+		mSquares[4].placeCircle();
+		AImadeMove = true;
+	}
+	
+	else if( mSquares[2].getState() == SQUARE_CROSS && mSquares[4].getState() == SQUARE_CROSS && mSquares[6].getState() == SQUARE_EMPTY)
+	{
+		mSquares[6].placeCircle();
+		AImadeMove = true;
+	}
+}
+
+
+//The AI isnt that smart yet, if it could not win or block the player, just pick a random available square
+//without strategy
+
+void LBoard::AIrandom()
+{
+	if( AImadeMove )
+		return;	
+	
+	Uint8 pos;
+	
+	do
+	{
+		pos = Random(9);
+	} 
+	while( mSquares[pos].getState() != SQUARE_EMPTY);
+	
+	mSquares[pos].placeCircle();
 }
