@@ -43,7 +43,7 @@ int main(int argc, char **argv)
 					gBoard.handleEvent(&e);
 				
 				else if( gBoard.getGameState() == GAME_WAIT)
-					if(e.key.keysym.sym == SDLK_SPACE)
+					if(e.type == SDL_MOUSEBUTTONDOWN && e.button.button == SDL_BUTTON_LEFT)
 						gBoard.restart();
 			}
 			
