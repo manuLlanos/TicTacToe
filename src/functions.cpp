@@ -90,7 +90,7 @@ bool loadMedia()
 			printf("Failed to render text texture(AI wins)\n");
 			success = false;
 		}
-		else if( ! gRestartTextTexture.loadFromRenderedText("SPACEBAR to restart", textColor))
+		else if( ! gRestartTextTexture.loadFromRenderedText("Left click to restart", textColor))
 		{
 			printf("Failed to render text texture (restart)\n");
 			success = false;
