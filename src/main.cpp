@@ -6,6 +6,8 @@
 #include <stdio.h>
 #include <string>
 
+#include "../headers/Random.h"
+
 #include "../headers/texture.h"
 #include "../headers/board.h"
 
@@ -20,6 +22,8 @@ int main(int argc, char **argv)
 {
 	bool quit = false;
 	SDL_Event e;
+	
+	SEED;
 	
 	if( ! init())
 		printf("Initialization error!\n");
